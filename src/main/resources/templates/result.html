@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th='http://www.thymeleaf.org' lang="en">
+<head th:insert="fragments :: head">
+    <title>Result</title>
+</head>
+<body>
+<div th:insert="fragments :: navbar"></div>
+<h3 th:if='${error}' th:text='${error}' style='color: red;'></h3>
+<div th:unless='${error}' style="margin: auto">
+    <h1 style='color: green;'>Success!</h1>
+    <h2>Your order summary:</h2>
+    <div class="table" style="border: solid black 2px">
+        <!--<div style="border: solid black 2px; margin: 3px 3px; padding: 2px 2px;"><b>Order total: </b><span th:text='${}' /></div>-->
+        <div style="border: solid black 2px; margin: 3px 3px; padding: 2px 2px;"><b>Id: </b><span th:text='${id}' /></div>
+        <div style="border: solid black 2px; margin: 3px 3px; padding: 2px 2px;"><b>Status: </b><span th:text='${status}' /></div>
+        <div style="border: solid black 2px; margin: 3px 3px; padding: 2px 2px;"><b>Charge id: </b><span th:text='${chargeId}' /></div>
+        <!--<div style="border: solid black 1px">Order placed on: <span th:text="${timestamp}"/></div>-->
+        <div style="border: solid black 2px; margin: 3px 3px; padding: 2px 2px;"><b>Balance transaction id: </b><span th:text='${balance_transaction}' /></div>
+    </div>
+    <a th:href="@{/}" class="btn btn-primary">Return to Shopping</a>
+</div>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>

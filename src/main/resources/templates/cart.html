@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+<main role="main">
+    <div class="container">
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cart}" th:with="product=${item.key}">
+                    <td style="width: 10%; padding-left: 0"><img style="width: 100%; max-height: 80px"
+                                                                 th:src="${product.image}"/></td>
+                    <td th:text="${product.name}"></td>
+                    <td>
+                        <input form="updateForm" name="id" th:value="${product.id}" type="hidden"/>
+                        <input form="updateForm" min="0" name="quantity" th:value="${item.value}" type="number"/>
+                    </td>
+                    <td th:if="${list.add(product.price * item.value)}"
+                        th:text="${#numbers.formatCurrency(product.price * item.value)}"></td>
+                    <td>
+                        <form method="post" style="display: inline" th:action="@{/cart}">
+                            <input name="_method" type="hidden" value="DELETE"/>
+                            <input name="id" th:value="${product.id}" type="hidden"/>
+                            <button class="btn btn-danger" style="display: inline" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td>Total</td>
+                    <td></td>
+                    <td th:text="${#numbers.formatCurrency(#aggregates.sum(list))}"></td>
+                    <td>
+                        <!--checkout nav button-->
+                        <div th:if="${cart.size()>0}">
+                            <form id="checkout-form" method="POST" th:action="@{/charge}">
+                                <input name="amount" th:value="${amount}" type="hidden">
+                                <script
+                                        class="stripe-button"
+                                        data-description="Widget"
+                                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                        data-locale="auto"
+                                        data-name="Demo Site"
+                                        data-zip-code="false"
+                                        src="https://checkout.stripe.com/checkout.js" th:attr='data-key=${stripePublicKey},
+                                        data-amount=${amount},
+                                        data-currency=${currency}'>
+                                </script>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+
+            <form id="updateForm" method="post" th:action="@{/cart}" th:if="${cart.size() > 0}">
+                <!-- form doesn't support PATCH requests, but this tells Spring Boot to use @PatchMapping anyway. -->
+                <input name="_method" type="hidden" value="PATCH"/>
+                <button class="btn btn-primary" type="submit" style="margin-right: 12px;">Update Cart</button>
+            </form>
+
+            <div th:if="${cart.size() == 0}">Nothing in your cart yet.</div>
+
+            <a class="btn btn-primary" th:href="@{/}">Return to Shopping</a>
+        </div>
+    </div>
+</main>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>

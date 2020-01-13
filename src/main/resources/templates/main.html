@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="fragments :: head">
+    <link rel="stylesheet" href="custom.css">
+</head>
+<body>
+<div style="color: firebrick; background-color: whitesmoke" th:replace="fragments :: navbar"></div>
+
+<main role="main" style="background-color: whitesmoke">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron" style="background-color: firebrick; color: whitesmoke;">
+        <div class="container">
+            <h1 class="display-3">Tech Talent Store</h1>
+            <p>This is a small e-commerce application that allows the user to purchase some of a few products that are
+                offered here. </p>
+            <p><a class="btn btn-lg" href="/about" role="button" style="background-color: firebrick; color: whitesmoke; border-color: whitesmoke">Learn more &raquo;</a></p>
+        </div>
+    </div>
+    <div class="jumbotron" style="width: auto; background-color: whitesmoke;">
+        <div class="row" style="width: 75%; display: flex; justify-content: center; flex-direction: row; margin: auto;">
+            <div class="card"
+                 style="width: 300px; margin: 20px; padding: 10px 10px; align-content: center; justify-content: space-between;"
+                 th:each="product : ${products}">
+                <img class="card-img-top" th:src="${product.getImage()}"/>
+                <a th:href="@{|/product/${product.getId()}|}" method="get" class="card-title"
+                   th:text="${product.getName()}"/>
+                <h6 th:text="${product.getDescription()}"/>
+                <h6 th:text="${'Category: '}+${product.getCategory()}"/>
+                <h6 th:text="${'Brand: '}+${product.getBrand()}"/>
+                <h6 th:text="${'Rating: '}+${product.getRating()}"/>
+                <h6 th:text="${'Qty: '}+${product.getQuantity()}"/>
+                <h4 style="color: orangered;" th:text="${#numbers.formatCurrency(product.getPrice())}"/>
+                <form th:action="@{/cart}" method="post" class="card-footer">
+                    <input type="hidden" name="id" th:value="${product.getId()}"/>
+                    <button type="submit" class="btn" style="background-color: firebrick; color: whitesmoke">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>
